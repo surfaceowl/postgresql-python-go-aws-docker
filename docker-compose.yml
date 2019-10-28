@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  docker-postgresql:
+    restart: always
+    image: docker-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - DEBUG=false
+      - DB_USER=postgresdba
+      - DB_PASS=postgresdba
+      - DB_NAME=db_01
+
+    volumes:
+      - /data-postgres:/data-postgres
+  docker-python:
+    depends_on:
+      - docker-postgresql
+    restart: always
+    image: docker-python38
+    ports:
+      - 8888:8888
+
+    volumes:
+      - /data-postgres:/data-postgres
+      - /docker-python-jupyter:/docker-python-jupyter
