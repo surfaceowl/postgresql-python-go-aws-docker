@@ -40,10 +40,18 @@ docker build -t postgres-docker .
 ```
 
 *3- From the same location, run the Docker image you just built in a new container on your local machine*<br> 
-This command will create create a persistent mount point at `postgres-data`, so your database will be retained between uses of the Docker container.  `$(pwd)` finds the *current working directory*, and should work cross-platform.
+This command will run the `docker-python38` image, and create a persistent mount point for the entire project structure underneath the `home` directory in the docker container. <br><br>
+`$(pwd)` finds the *current working directory*, and should work cross-platform.
 ```
-docker run -it --rm -v ${pwd}/postgres-data:/postgres-data postgres-docker:latest /bin/bash 
+docker run -it -v ${PWD}:/home -p 8888:8888 docker-python38
 ```
+This command will also run the `docker-python38` image, but only map lower level working directories as persistent volumes
+```
+docker run -it -v ${PWD}/docker-python-jupyter:/home/docker-python-jupyter -v ${PWD}/data-python:/home/data-python -p 8888:8888 docker-python38
+```
+Note:  use `${PWD}` to build persistent shared volumes with the host inside the root dir of the project.<br>
+Be sure to use docker port mapping `-p 8888:8888` so you can access the notebook from your host machine
+
 
 ## Running the tests
 

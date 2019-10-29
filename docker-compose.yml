@@ -13,15 +13,21 @@ services:
       - DB_NAME=db_01
 
     volumes:
-      - /data-postgres:/data-postgres
+      - ${pwd}/docker-postgres:/docker-postgres
+      - ${pwd}/data-postgres:/data-postgres
   docker-python:
     depends_on:
       - docker-postgresql
     restart: always
     image: docker-python38
     ports:
-      - 8888:8888
-
+      - "8888:8888"
     volumes:
-      - /data-postgres:/data-postgres
-      - /docker-python-jupyter:/docker-python-jupyter
+      - ${pwd}/docker-python-jupyter:/docker-python-jupyter
+      - ${pwd}/data-python:/data-python
+
+volumes:
+  docker-postgres:
+  data-postgres:
+  docker-python-jupyter:
+  data-python:

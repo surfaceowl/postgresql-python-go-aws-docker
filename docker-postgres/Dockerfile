@@ -2,7 +2,7 @@ FROM postgres:12.0
 
 USER root
 
-WORKDIR /root/
+WORKDIR /home/
 
 LABEL vendor=Postgres12_Official_Image \
       com.example.is-beta= \
@@ -12,7 +12,7 @@ LABEL vendor=Postgres12_Official_Image \
 
 # configure local directories and mount points
 # make persistent postgres directory in docker container
-RUN mkdir -p /data-postgres && ls -al
+RUN mkdir -p ./docker-postgres && mkdir -p ./data-postgres && ls -al
 
 # install linux and git tools
 RUN apt install -y apt &&\
@@ -24,12 +24,8 @@ RUN apt install -y apt &&\
     sudo \
     wget
 
-    # packages for building python from source
-    # apt-get install build-essential libffi-devsudo libreadline-gplv2-dev libncursesw5-dev \
-    # libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
-
 # Add volumes for backup of config, logs and databases
-VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql", "../data-postgres"]
+VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql", "./docker-postgres", "./data-postgres"]
 
 # set env vars
 ENV POSTGRES_PASSWORD postgres
