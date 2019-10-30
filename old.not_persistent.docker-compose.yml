@@ -35,8 +35,6 @@ services:
       - docker-pgadmin4
     restart: always
     image: docker-python38
-    links:
-      - docker-postgres
     ports:
       - "8888:8888"
     volumes:

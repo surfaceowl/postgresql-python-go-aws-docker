@@ -1,4 +1,4 @@
-FROM python:3.8.0-buster
+FROM python:3.8.0-slim-buster
 
 USER root
 
@@ -22,11 +22,20 @@ RUN apt install -y apt &&\
     git-core \
     software-properties-common \
     sudo \
-    wget
+    wget \
+    nodejs \
+    npm \
+    python3-pandas \
+    python3-numpy \
+    python3-scipy \
+    python3-dateutil \
+    python3-pkg-resources \
+    python3-tz \
+    python3-bs4 \
+    python3-lxml
 
 # install python dependencies - include custom libs for database work
 COPY ./requirements.txt ./docker-python-jupyter/requirements.txt
-COPY ./run_jupyter.sh ./docker-python-jupyter/run_jupyter.sh
 
 RUN python3 -V && sudo python3 -m pip install --upgrade pip && sudo python3 -m pip install -r ./docker-python-jupyter/requirements.txt
 RUN which python3
@@ -39,6 +48,6 @@ ENV JUPYTER_PORT 8888
 # Add volumes for backup of files created/edited
 VOLUME  ["./docker-python-jupyter", "./data-python"]
 
-CMD ["./docker-python-jupyter/run_jupyter.sh"]
+COPY ./run_jupyter_notebook.sh ./docker-python-jupyter/run_jupyter_notebook.sh
 
-# CMD ["/bin/bash"]
+CMD ["./docker-python-jupyter/run_jupyter_notebook.sh"]

@@ -7,6 +7,8 @@ eval $CMD0
 eval $CMD1
 
 # CMD fails without --ip and --allow root flags in this location
-CMD="jupyter notebook --allow-root --no-browser --ip 0.0.0.0 --port=8888 --NotebookApp.token='test'"
+# --no-browser flag used because user should use browser from their local machine
+# add password with this snippet to end of jupyter CMD in next line: --NotebookApp.token='test'
+CMD="jupyter notebook --NotebookApp.token='test' --no-browser --allow-root --ip 0.0.0.0 --port=8888"
 echo 'Starting jupyter notebook server with commmand: '$CMD
 eval $CMD

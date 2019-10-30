@@ -1,0 +1,15 @@
+# core data science libraries - not needed locally, use from container
+
+# notebook libraries - required on local machine
+jupyter==1.0.0
+jupyterlab==1.2.0
+jupyter-contrib-nbextensions==0.5.1
+jupyter-nbextensions-configurator==0.4.1
+jupyternotify==0.1.15
+
+# visualization libs - for static plots or interactive hosted server available for browser outside this container
+bokeh==1.3.4       # interactive plotting/analysis
+
+# project maintenance libraries
+pur==5.2.2
+ipython==7.9.0
