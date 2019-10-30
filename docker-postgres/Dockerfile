@@ -39,7 +39,7 @@ ADD init /docker-entrypoint-initdb.d/
 # Run the rest of the commands as the ``postgres`` user
 RUN useradd -s /bin/bash postgresondocker
 # set ownership of persistent mount to current user so we can write files
-RUN chown postgresondocker:postgresondocker /data-postgres
+RUN chown postgresondocker:postgresondocker ./data-postgres
 
 # Expose the PostgreSQL port
 EXPOSE 5432
