@@ -2,8 +2,9 @@ version: '3.7'
 
 services:
   docker-postgres:
+    build:
+      context: ./docker-postgres
     restart: always
-    image: docker-postgres
     ports:
       - "5432:5432"
     environment:
@@ -12,16 +13,15 @@ services:
       - DB_PASS=postgresdba
       - DB_NAME=db_01
     volumes:
-      - "${PWD}/docker-postgres:/docker-postgres"
-      - "${PWD}/data-postgres:/data-postgres"
+      - ./docker-postgres/:/docker-postgres
+      - ./data-postgres/:/data-postgres
 
   docker-pgadmin4:
+    build:
+      context: ./docker-pgadmin4
     depends_on:
       - docker-postgres
     restart: always
-    image: dpage/pgadmin4
-    links:
-      - docker-postgres
     ports:
       - "5050:80"
     environment:
@@ -31,14 +31,13 @@ services:
     #  - ${PWD}docker-pgadmin4:/var/lib/pgadmin
 
   docker-python:
+    build:
+      context: docker-python38
     depends_on:
       - docker-pgadmin4
     restart: always
-    image: docker-python38
-    links:
-      - docker-postgres
     ports:
       - "8888:8888"
     volumes:
-      - "${PWD}/docker-python-jupyter:/docker-python-jupyter"
-      - "${PWD}/data-python:/data-python"
+      - ./docker-python38/:/docker-python38
+      - ./data-python/:/data-python

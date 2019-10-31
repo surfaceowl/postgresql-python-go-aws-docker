@@ -38,5 +38,5 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - "${PWD}/docker-python-jupyter:/docker-python-jupyter"
+      - "${PWD}/docker-python38:/docker-python38"
       - "${PWD}/data-python:/data-python"
