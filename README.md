@@ -45,29 +45,40 @@ docker build -t docker-pgadmin4 .
 
 *C - python/jupyter notebook container.*  So you can work with the postgres database progammatically <br>
 ```
-docker build -t docker-python-jupyter .
+docker build -t docker-python38 .
 
 ```
+*D - create docker volumes.*
+```
+docker volume create --driver local --opt type=bind --opt device=:${pwd}/docker-python38 docker-python38
+```
 <br><br>
-*4- From each of the the same locations above, you can run the Docker images you just built in a new container on your local machine*<br> 
+*4- If you are running on windows, unfortunately `docker-compose up` does not correctly create persistent shared mounts to the folders you need access too for data persistence such as `data-postgres` for database persistence, and `docker-python38` for jupyter notebooks.  <br><br>  Therefore, from the project root folder, you can run the Docker images you just built in a new container on your local machine*<br> 
 As an example, this command will run the `docker-python38` image, and create a persistent mount point for the entire project structure underneath the `home` directory in the docker container. <br><br>
-`$(pwd)` finds the *current working directory*, and should work cross-platform.
+`$(pwd)` finds the *current working directory*, and should work cross-platform.<b><br>
+Open up three new terminal windows, and run each commands separately in it's own terminal window.
 ```
 docker run -it -v ${PWD}:/home -p 8888:8888 docker-python38
 ```
-This command will also run the `docker-python38` image, but only map lower level working directories as persistent volumes
+Another version of this command will also run the `docker-python38` image, but only map lower level working directories as persistent volumes
 ```
-docker run -it -v ${PWD}/docker-python-jupyter:/home/docker-python-jupyter -v ${PWD}/data-python:/home/data-python -p 8888:8888 docker-python38
+docker run -it -v ${PWD}/docker-python38:/home/docker-python38 -v ${PWD}/data-python:/home/data-python -p 8888:8888 docker-python38
 ```
 Note:  use `${PWD}` to build persistent shared volumes with the host inside the root dir of the project.<br>
 Be sure to use docker port mapping `-p 8888:8888` so you can access the notebook from your host machine
 
 To run the other containers, you will need to change the location you are invoking the command from, the port mapping (e.g. 8888:8888) and the name of the docker image name.
+```
+docker run -it -v ${PWD}/docker-postgres:/var/lib/pgadmin -v ${PWD}/data-postgres:/home/data-postres -p 5432:5432 docker-postgres
+```
 
+```
+docker run -it --env PGADMIN_DEFAULT_EMAIL=1234@admin.com --env PGADMIN_DEFAULT_PASSWORD=1234 -v ${PWD}/docker-pgadmin4:/home/docker-pgadmin4 -v ${PWD}/data-postgres:/home/data-postres -p 5050:80 docker-pgadmin
+```
 *5 - To run all the containers at once.*  Navigate to the project root folder, and run `docker-compose up` from the terminal.  That command will invoke the docker configuration specified in the file `docker-compose.yml`, which in turn links to the `Dockerfiles` which were illustrated in the previous steps.
 e.g for postgresql - the terminal commands including persistent mounts would be:
 ```
-docker run -it -v ${PWD}/docker-postgres:/home/docker-postgres -v ${PWD}/data-postgres:/home/data-postres -p 5432:5432 docker-postgres
+
 ```
 
 ## Running the tests

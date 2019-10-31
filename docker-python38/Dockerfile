@@ -12,7 +12,7 @@ LABEL vendor=Python38_Official_Image \
 
 # configure local directories and mount points - under ~, so folders are under use $HOME
 # make persistent postgres directory in docker container
-RUN mkdir -p ./data-python && mkdir -p ./docker-python-jupyter && ls -al
+RUN mkdir -p ./data-python && mkdir -p ./docker-python38 && ls -al
 
 # install linux and git tools
 RUN apt install -y apt &&\
@@ -35,9 +35,9 @@ RUN apt install -y apt &&\
     python3-lxml
 
 # install python dependencies - include custom libs for database work
-COPY ./requirements.txt ./docker-python-jupyter/requirements.txt
+COPY ./requirements.txt ./docker-python38/requirements.txt
 
-RUN python3 -V && sudo python3 -m pip install --upgrade pip && sudo python3 -m pip install -r ./docker-python-jupyter/requirements.txt
+RUN python3 -V && sudo python3 -m pip install --upgrade pip && sudo python3 -m pip install -r ./docker-python38/requirements.txt
 RUN which python3
 
 # set env vars
@@ -46,8 +46,8 @@ ENV JUPYTER_PORT 8888
 
 # mount volumes
 # Add volumes for backup of files created/edited
-VOLUME  ["./docker-python-jupyter", "./data-python"]
+VOLUME  ["./docker-python38", "./data-python"]
 
-COPY ./run_jupyter_notebook.sh ./docker-python-jupyter/run_jupyter_notebook.sh
+COPY ./run_jupyter_notebook.sh ./docker-python38/run_jupyter_notebook.sh
 
-CMD ["./docker-python-jupyter/run_jupyter_notebook.sh"]
+CMD ["./docker-python38/run_jupyter_notebook.sh"]
