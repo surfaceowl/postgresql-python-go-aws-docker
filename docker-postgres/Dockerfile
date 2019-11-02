@@ -14,15 +14,17 @@ LABEL vendor=Postgres12_Official_Image \
 # make persistent postgres directory in docker container
 RUN mkdir -p ./docker-postgres && mkdir -p ./data-postgres && ls -al
 
-# install linux and git tools
+# install linux and git tools; last line cleans up install dir for smaller docker image
 RUN apt install -y apt &&\
     apt update && apt upgrade -y &&\
     apt install -y \
+    bash-completion \
     curl \
     git-core \
     software-properties-common \
     sudo \
-    wget
+    wget &&\
+    rm -r /var/lib/apt
 
 # Add volumes for backup of config, logs and databases
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql", "./docker-postgres", "./data-postgres"]

@@ -2,6 +2,9 @@ version: '3.7'
 
 services:
   docker-postgres:
+    build:
+      context: ./docker-postgres
+      dockerfile: Dockerfile
     image: docker-postgres
     restart: always
     ports:
@@ -12,11 +15,14 @@ services:
       - DB_PASS=postgresdba
       - DB_NAME=db_01
     volumes:
-      - ${pwd}/docker-postgres:/docker-postgres
-      - ${pwd}/data-postgres:/data-postgres
+      - ${pwd}/docker-postgres:/home/docker-postgres
+      - ${pwd}/data-postgres:/home/data-postgres
 
-  docker-pgadmin:
-    image: docker-pgadmin
+  docker-pgadmin4:
+    build:
+      context: ./docker-pgadmin4
+      dockerfile: Dockerfile
+    image: docker-pgadmin4
     depends_on:
       - docker-postgres
     restart: always
@@ -28,10 +34,13 @@ services:
     volumes:
       - ${pwd}/docker-pgadmin4:/var/lib/pgadmin
 
-  docker-python:
+  docker-python38:
+    build:
+      context: ./docker-python38
+      dockerfile: Dockerfile
     image: docker-python38
     depends_on:
-      - docker-pgadmin
+      - docker-postgres
     restart: always
     ports:
       - "8888:8888"

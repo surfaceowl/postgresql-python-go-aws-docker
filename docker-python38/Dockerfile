@@ -2,7 +2,7 @@ FROM python:3.8.0-slim-buster
 
 USER root
 
-WORKDIR /home/
+WORKDIR /home
 
 LABEL vendor=Python38_Official_Image \
       com.example.is-beta= \
@@ -12,12 +12,13 @@ LABEL vendor=Python38_Official_Image \
 
 # configure local directories and mount points - under ~, so folders are under use $HOME
 # make persistent postgres directory in docker container
-RUN mkdir -p ./data-python && mkdir -p ./docker-python38 && ls -al
+RUN mkdir -p /home/data-python && mkdir -p /home/docker-python38 && ls -al
 
-# install linux and git tools
+# install linux and git tools; last line cleans up install dir for smaller docker image
 RUN apt install -y apt &&\
     apt update && apt upgrade -y &&\
     apt install -y \
+    bash-completion \
     curl \
     git-core \
     software-properties-common \
@@ -32,22 +33,21 @@ RUN apt install -y apt &&\
     python3-pkg-resources \
     python3-tz \
     python3-bs4 \
-    python3-lxml
+    python3-lxml &&\
+    rm -r /var/lib/apt
 
 # install python dependencies - include custom libs for database work
-COPY ./requirements.txt ./docker-python38/requirements.txt
+COPY ./requirements.txt /home/docker-python38/requirements.txt
 
-RUN python3 -V && sudo python3 -m pip install --upgrade pip && sudo python3 -m pip install -r ./docker-python38/requirements.txt
-RUN which python3
+RUN echo "" && sudo python3 -m pip install --upgrade pip && sudo python3 -m pip install -r /home/docker-python38/requirements.txt
+RUN echo "" && echo "running python version:  " && python3 -V && echo "" && echo "at: " && which python3 && echo ""
 
 # set env vars
 ENV POSTGRES_PORT 5432
 ENV JUPYTER_PORT 8888
 
-# mount volumes
-# Add volumes for backup of files created/edited
-VOLUME  ["./docker-python38", "./data-python"]
+COPY ./run_jupyter_notebook.sh /home/docker-python38/run_jupyter_notebook.sh
 
-COPY ./run_jupyter_notebook.sh ./docker-python38/run_jupyter_notebook.sh
+WORKDIR /home/docker-python38
 
-CMD ["./docker-python38/run_jupyter_notebook.sh"]
+CMD ./run_jupyter_notebook.sh

@@ -12,12 +12,12 @@ CMD_RUN_PGADMIN4="docker run -it --env PGADMIN_DEFAULT_EMAIL=1234@admin.com --en
 CMD_RUN_PYTHON="docker run -it -v ${PWD}/docker-python38:/home/docker-python38 -v ${PWD}/data-python:/home/data-python -p 8888:8888 docker-python38"
 
 # build containers - run in series
-CMD_BUILD_ALL="eval $CMD_BUILD_POSTGRES && eval $CMD_BUILD_PGADMIN4 && eval $CMD_BUILD_PYTHON"
+CMD_BUILD_ALL="eval $CMD_BUILD_POSTGRES && eval $CMD_BUILD_PGADMIN4 && eval $CMD_BUILD_PYTHON && ls"
 
 # run all containers - run in parallel, as separate child processes
 CMD_RUN_ALL="eval $CMD_RUN_POSTGRES & eval $CMD_RUN_PGADMIN4 & eval $CMD_RUN_PYTHON &"
 
 # put build in series, wait for completion, eval RUNALL in parallel and wait
-eval $CMD_BUILD_ALL &&
+eval $CMD_BUILD_ALL
 
-eval $CMD_RUN_ALL &
+eval $CMD_RUN_ALL
