@@ -47,3 +47,4 @@ services:
     volumes:
       - ${pwd}/docker-python38:/docker-python38
       - ${pwd}/data-python:/data-python
+      - ${pwd}./:/home

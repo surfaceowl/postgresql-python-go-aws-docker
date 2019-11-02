@@ -48,6 +48,6 @@ ENV JUPYTER_PORT 8888
 
 COPY ./run_jupyter_notebook.sh /home/docker-python38/run_jupyter_notebook.sh
 
-WORKDIR /home/docker-python38
+WORKDIR /home
 
-CMD ./run_jupyter_notebook.sh
+CMD ./docker-python38/run_jupyter_notebook.sh
