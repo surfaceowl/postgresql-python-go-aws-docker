@@ -9,14 +9,11 @@ services:
     restart: always
     ports:
       - "5432:5432"
-    environment:
-      - DEBUG=false
-      - DB_USER=postgresdba
-      - DB_PASS=postgresdba
-      - DB_NAME=db_01
+    env_file:
+      - .env.list
     volumes:
-      - ${pwd}/docker-postgres:/home/docker-postgres
-      - ${pwd}/data-postgres:/home/data-postgres
+      - ${pwd}./docker-postgres:/home/docker-postgres
+      - ${pwd}./data-postgres:/home/data-postgres
 
   docker-pgadmin4:
     build:
@@ -28,11 +25,10 @@ services:
     restart: always
     ports:
       - "5050:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: 1234@admin.com
-      PGADMIN_DEFAULT_PASSWORD: 1234
+    env_file:
+      - .env.list
     volumes:
-      - ${pwd}/docker-pgadmin4:/var/lib/pgadmin
+      - ${pwd}./docker-pgadmin4:/var/lib/pgadmin
 
   docker-python38:
     build:
@@ -41,10 +37,11 @@ services:
     image: docker-python38
     depends_on:
       - docker-postgres
+    env_file:
+      - .env.list
     restart: always
     ports:
       - "8888:8888"
     volumes:
-      - ${pwd}/docker-python38:/docker-python38
-      - ${pwd}/data-python:/data-python
-      - ${pwd}./:/home
+      - ${pwd}./docker-python38:/home/docker-python38
+      - ${pwd}./data-python:/home/data-python

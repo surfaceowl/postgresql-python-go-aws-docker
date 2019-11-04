@@ -15,9 +15,9 @@ LABEL vendor=Python38_Official_Image \
 RUN mkdir -p /home/data-python && mkdir -p /home/docker-python38 && ls -al
 
 # install linux and git tools; last line cleans up install dir for smaller docker image
-RUN apt install -y apt &&\
-    apt update && apt upgrade -y &&\
-    apt install -y \
+RUN apt-get install -y apt &&\
+    apt-get update && apt-get upgrade -y &&\
+    apt-get install -y \
     bash-completion \
     curl \
     git-core \
@@ -26,28 +26,27 @@ RUN apt install -y apt &&\
     wget \
     nodejs \
     npm \
-    python3-pandas \
     python3-numpy \
     python3-scipy \
     python3-dateutil \
     python3-pkg-resources \
     python3-tz \
-    python3-bs4 \
-    python3-lxml &&\
+    python3-bs4 &&\
     rm -r /var/lib/apt
 
 # install python dependencies - include custom libs for database work
-COPY ./requirements.txt /home/docker-python38/requirements.txt
+COPY ./docker-python38/requirements.txt /home/docker-python38/requirements.txt
 
-RUN echo "" && sudo python3 -m pip install --upgrade pip && sudo python3 -m pip install -r /home/docker-python38/requirements.txt
-RUN echo "" && echo "running python version:  " && python3 -V && echo "" && echo "at: " && which python3 && echo ""
+RUN echo "" && python -m pip install --upgrade pip && python -m pip install -r /home/docker-python38/requirements.txt --src /usr/local/lib/python3.8/site-packages && rm -r /root/.cache/pip
+RUN echo "" && echo "running python version:  " && python -V && echo "" && echo "at: " && which python && echo ""
 
 # set env vars
-ENV POSTGRES_PORT 5432
-ENV JUPYTER_PORT 8888
-
-COPY ./run_jupyter_notebook.sh /home/docker-python38/run_jupyter_notebook.sh
-
+# assume docker build context is project root using `-f` flag, not run from same folder as Dockfile (which is common)
+# example comand; `docker build -f docker-python38/Dockerfile -t docker-python38 .`
+COPY .env.list /home/.env.list
 WORKDIR /home
+RUN /bin/bash -c "set -o allexport && source ./.env.list"
 
-CMD ./docker-python38/run_jupyter_notebook.sh
+COPY ./docker-python38/run_jupyter_notebook.sh /home/docker-python38/run_jupyter_notebook.sh
+
+CMD ["./docker-python38/run_jupyter_notebook.sh"]
