@@ -33,13 +33,21 @@ VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql", "./doc
 # assume docker build context is project root using `-f` flag, not run from same folder as Dockfile (which is common)
 # example comand; `docker build -f docker-postgres/Dockerfile -t docker-postgres .`
 COPY .env.list /home/.env.list
-RUN /bin/bash -c "set -o allexport && source ./.env.list && printenv"
+RUN /bin/bash -c "set -o allexport && source .env.list && printenv"
 
-# Run the rest of the commands as the ``postgres`` user
-RUN useradd -s /bin/bash postgresdba
+# create system user for database
+RUN useradd -G root,postgres postgresdba
+
+# troubleshooting
+# RUN groups && cat /etc/passwd
+
+# TODO: Run the rest of the commands as the `postgresdba` user
+# create postgresql superuser; upgrade try using env var: $PG_PRIMARY_USER
+# RUN psql createuser -s postgresdba
 
 # set ownership of persistent mount to current user so we can write files
 RUN chown postgresdba:postgresdba ./data-postgres
 
+# USER postgresdba
 # Expose the PostgreSQL port
 EXPOSE 5432

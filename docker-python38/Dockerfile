@@ -43,6 +43,7 @@ RUN echo "" && echo "running python version:  " && python -V && echo "" && echo 
 # set env vars
 # assume docker build context is project root using `-f` flag, not run from same folder as Dockfile (which is common)
 # example comand; `docker build -f docker-python38/Dockerfile -t docker-python38 .`
+# file is duplicated in each docker directory to enable docker run command from that folder individually
 COPY .env.list /home/.env.list
 WORKDIR /home
 RUN /bin/bash -c "set -o allexport && source ./.env.list"

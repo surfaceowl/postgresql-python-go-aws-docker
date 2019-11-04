@@ -14,4 +14,4 @@ VOLUME  ["./docker-postgres", "./data-postgres"]
 # assume docker build context is project root using `-f` flag, not run from same folder as Dockfile (which is common)
 # example comand; `docker build -f docker-pgadmin4/Dockerfile -t docker-pgadmin4 .`
 COPY .env.list /home/.env.list
-RUN /bin/bash -c "set -o allexport && source ./.env.list"
+RUN /bin/sh -c "set -o allexport && source .env.list"
