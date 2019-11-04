@@ -30,18 +30,24 @@ RUN apt install -y apt &&\
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql", "./docker-postgres", "./data-postgres"]
 
 # set env vars
-ENV POSTGRES_PASSWORD postgres
-ENV POSTGRES_DB test_db
-ENV INITIAL_DB_USER user00
-ENV INITIAL_DB_PASSWORD user00
-ENV INITIAL_DB_DATABASE user00_db
+# assume docker build context is project root using `-f` flag, not run from same folder as Dockfile (which is common)
+# example comand; `docker build -f docker-postgres/Dockerfile -t docker-postgres .`
+COPY .env.list /home/.env.list
+RUN /bin/bash -c "set -o allexport && source .env.list && printenv"
 
-ADD init /docker-entrypoint-initdb.d/
+# create system user for database
+RUN useradd -G root,postgres postgresdba
 
-# Run the rest of the commands as the ``postgres`` user
-RUN useradd -s /bin/bash postgresondocker
+# troubleshooting
+# RUN groups && cat /etc/passwd
+
+# TODO: Run the rest of the commands as the `postgresdba` user
+# create postgresql superuser; upgrade try using env var: $PG_PRIMARY_USER
+# RUN psql createuser -s postgresdba
+
 # set ownership of persistent mount to current user so we can write files
-RUN chown postgresondocker:postgresondocker ./data-postgres
+RUN chown postgresdba:postgresdba ./data-postgres
 
+# USER postgresdba
 # Expose the PostgreSQL port
 EXPOSE 5432
