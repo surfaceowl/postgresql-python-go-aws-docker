@@ -8,7 +8,7 @@ psycopg2-pgevents==0.1.1
 # core data science libraries
 pandas==0.25.3  # must install via apt-get due to dependency issues with Python 3.8
 glom==19.10.0  # declarative nested data transformation, from Mahmoud!
-lxml==4.6.3    # for xml parsing
+lxml==4.9.1    # for xml parsing
 
 # notebook libraries - required on local machine
 jupyter==1.0.0
