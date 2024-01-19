@@ -12,7 +12,7 @@ lxml==4.9.1    # for xml parsing
 
 # notebook libraries - required on local machine
 jupyter==1.0.0
-jupyterlab==1.2.21
+jupyterlab==3.6.7
 jupyter-contrib-nbextensions==0.5.1
 jupyter-nbextensions-configurator==0.4.1
 jupyternotify==0.1.15
